@@ -7,10 +7,6 @@
                     @foreach ($headers as $header)
                         <th>{{ $header }}</th>
                     @endforeach
-
-                    @if ($hasActions)
-                        <th>Actions</th>
-                    @endif
                 </tr>
             </thead>
 
@@ -18,25 +14,13 @@
             <tbody>
                 @forelse ($rows as $row)
                     <tr>
-                        @foreach ($headers as $key => $header)
-                            @php
-                                // Ambil kunci field (jika $headers dikirim sebagai ['name' => 'Nama'])
-                                $field = is_string($key) ? $key : \Illuminate\Support\Str::snake(strtolower($header));
-                            @endphp
-                            <td>{{ data_get($row, $field, '-') }}</td>
+                        @foreach ($row as $cell)
+                            <td>{!! $cell !!}</td> {{-- 🟢 Pakai {!! !!} biar HTML bisa dirender --}}
                         @endforeach
-
-                        {{-- Slot untuk tombol aksi (optional) --}}
-                        @if ($hasActions)
-                            <td>
-                                {{ $actions($row) }}
-                            </td>
-                        @endif
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ count($headers) + ($hasActions ? 1 : 0) }}"
-                            class="text-center text-gray-500 py-4">
+                        <td colspan="{{ count($headers) }}" class="text-center text-gray-500 py-4">
                             Tidak ada data.
                         </td>
                     </tr>

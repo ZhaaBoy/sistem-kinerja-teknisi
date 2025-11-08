@@ -19,14 +19,17 @@
     <link rel="stylesheet" href="{{ asset('template/assets/dist/libs/apexcharts/dist/apexcharts.css') }}" />
     <link rel="stylesheet" href="{{ asset('template/assets/dist/libs/flyonui/src/vendor/apexcharts.css') }}" />
     <link rel="stylesheet" href="{{ asset('template/assets/dist/css/output.css') }}" />
-
+    <link rel="stylesheet" href="{{ asset('template/assets/icon/tabler-icons/tabler-icons.min.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-icon@2.4.2/icon.min.css">
     @stack('styles')
 </head>
 
 <body>
     <div class="bg-base-200 flex min-h-screen flex-col">
+        {{-- ✅ Alert Global (akan muncul di pojok kanan atas) --}}
         @if (session('message'))
-            <x-alert :type="session('type')" :message="session('message')" toast />
+            <x-alert :type="session('type', 'success')" :message="session('message')" toast />
         @endif
         <!-- Header -->
         <x-navbar />
@@ -44,7 +47,7 @@
                 <div class="flex items-center justify-between gap-3 max-lg:flex-col">
                     <p class="text-base-content text-center">
                         &copy; {{ date('Y') }} <a href="https://flyonui.com/" class="text-primary">ZhaaStore</a>,
-                        Made With ❤️ for a better web.
+                        Chamber Of Secret Team.
                     </p>
                     <div class="justify-enter flex items-center gap-4 max-sm:flex-col">
                         <a href="#" class="link link-primary link-animated font-normal">Linkedin</a>
@@ -56,6 +59,19 @@
     </div>
 
     <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (session('message'))
+        <script>
+            Swal.fire({
+                icon: '{{ session('type') ?? 'info' }}', // success, error, info, warning
+                title: '{{ ucfirst(session('type') ?? 'Info') }}',
+                text: '{{ session('message') }}',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true
+            });
+        </script>
+    @endif
     <script>
         document.addEventListener('alpine:init', () => {
             window.addEventListener('notify', event => {
@@ -81,6 +97,8 @@
     </script>
 
     <script src="{{ asset('template/assets/dist/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('template/assets/dist/libs/flyonui/flyonui.js') }}"></script>
+    <script src="{{ asset('template/assets/dist/js/main.js') }}"></script>
     <script src="{{ asset('template/assets/dist/libs/flyonui/dist/helper-apexcharts.js') }}"></script>
     <script src="{{ asset('template/assets/dist/libs/flyonui/flyonui.js') }}"></script>
     <script src="{{ asset('template/assets/dist/js/theme-utils.js') }}"></script>

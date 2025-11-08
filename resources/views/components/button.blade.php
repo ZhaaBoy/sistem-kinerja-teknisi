@@ -35,9 +35,9 @@
     <button x-data="{ loading: false }"
         x-on:click="
             loading = true;
-            setTimeout(() => loading = false, 2000);
+            $el.closest('form')?.submit();
         "
-        x-bind:disabled="loading"
+        x-bind:disabled="loading" type="{{ $attributes->get('type', 'submit') }}"
         {{ $attributes->merge([
             'class' => "btn {$variantClass} {$sizeClass} {$outlineClass} {$blockClass} {$disabledClass}",
         ]) }}>

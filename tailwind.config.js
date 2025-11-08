@@ -1,9 +1,11 @@
 /** @type {import('tailwindcss').Config} */
+import flyonUI from "flyonui/plugin";
 export default {
     content: [
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
+        "./node_modules/flyonui/dist/js/*.js",
     ],
     theme: {
         extend: {
@@ -32,5 +34,5 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [flyonUI],
 };
