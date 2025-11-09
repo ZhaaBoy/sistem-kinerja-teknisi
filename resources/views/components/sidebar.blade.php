@@ -62,7 +62,7 @@
                             </li>
                             <li>
                                 <x-nav-link :href="route('penugasan-pengiriman.index')" :active="request()->routeIs('penugasan-pengiriman.*')">
-                                    <i class="truck icon"></i>
+                                    <span class="icon-[tabler--receipt] size-4.5"></span>
                                     <span class="grow">Pengiriman Barang</span>
                                 </x-nav-link>
                             </li>
