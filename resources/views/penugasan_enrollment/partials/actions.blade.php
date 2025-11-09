@@ -1,6 +1,7 @@
 <div class="flex gap-2">
     {{-- Kepala Gudang: Bisa edit sebelum selesai --}}
-    @if (auth()->user()->role === \App\Models\User::ROLE_KEPALA_GUDANG && $a->status !== 'selesai')
+    @if (auth()->user()->role === \App\Models\User::ROLE_KEPALA_GUDANG &&
+            !in_array($a->status, ['selesai', 'proses_packing']))
         <a href="{{ route('penugasan-enrollment.edit', $a) }}">
             <x-button size="sm" variant="info">
                 <span class="icon-[tabler--edit] mr-1"></span> Edit
@@ -19,8 +20,7 @@
 
     {{-- Helper: Selesai Packing --}}
     @if (auth()->user()->role === \App\Models\User::ROLE_HELPER && $a->status === 'proses_packing')
-        <form method="POST" action="{{ route('hasil-enrollment.selesaiPacking', $a) }}"
-            onsubmit="return confirm('Yakin ingin menyelesaikan packing ini?')">
+        <form method="POST" action="{{ route('hasil-enrollment.selesaiPacking', $a) }}">
             @csrf
             <x-button size="sm" variant="primary">
                 <span class="icon-[tabler--package-check] mr-1"></span> Selesai Packing

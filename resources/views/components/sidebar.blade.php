@@ -37,7 +37,7 @@
                         {{-- DASHBOARD (untuk semua role) --}}
                         <li>
                             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                                <i class="home icon"></i>
+                                <span class="icon-[tabler--dashboard] size-4.5"></span>
                                 <span class="grow">Dashboard</span>
                             </x-nav-link>
                         </li>
@@ -46,7 +46,7 @@
                         @if (auth()->user()->role === 'admin')
                             <li>
                                 <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                                    <i class="users icon"></i>
+                                    <span class="icon-[tabler--user] size-4.5"></span>
                                     <span class="grow">Kelola User</span>
                                 </x-nav-link>
                             </li>
@@ -56,7 +56,7 @@
                         @if (auth()->user()->role === 'kepala_gudang')
                             <li>
                                 <x-nav-link :href="route('penugasan-enrollment.index')" :active="request()->routeIs('penugasan-enrollment.*')">
-                                    <i class="clipboard icon"></i>
+                                    <span class="icon-[tabler--checklist] size-4.5"></span>
                                     <span class="grow">Penugasan Enrollment</span>
                                 </x-nav-link>
                             </li>
@@ -68,7 +68,8 @@
                             </li>
                             <li>
                                 <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
-                                    <i class="chart bar icon"></i>
+
+                                    <span class="icon-[tabler--table] size-4.5"></span>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
                             </li>
@@ -78,19 +79,20 @@
                         @if (auth()->user()->role === 'teknisi')
                             <li>
                                 <x-nav-link :href="route('penugasan-enrollment.index')" :active="request()->routeIs('penugasan-enrollment.*')">
-                                    <i class="clipboard icon"></i>
+                                    <span class="icon-[tabler--checklist] size-4.5"></span>
                                     <span class="grow">Penugasan Enrollment</span>
                                 </x-nav-link>
                             </li>
                             <li>
                                 <x-nav-link :href="route('hasil-enrollment.index')" :active="request()->routeIs('hasil-enrollment.*')">
-                                    <i class="laptop icon"></i>
+                                    <span class="icon-[tabler--layout-grid] size-4.5"></span>
                                     <span class="grow">Hasil Enrollment</span>
                                 </x-nav-link>
                             </li>
                             <li>
                                 <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
-                                    <i class="chart line icon"></i>
+
+                                    <span class="icon-[tabler--table] size-4.5"></span>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
                             </li>
@@ -100,14 +102,14 @@
                         @if (auth()->user()->role === 'helper')
                             <li>
                                 <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
-                                    <i class="chart pie icon"></i>
+                                    <span class="icon-[tabler--table] size-4.5"></span>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
                             </li>
                             <li>
                                 <x-nav-link :href="route('penugasan-enrollment.index')" :active="request()->routeIs('penugasan-enrollment.*')">
-                                    <i class="tasks icon"></i>
-                                    <span class="grow">Penugasan Enrollment</span>
+                                    <span class="icon-[tabler--checklist] size-4.5"></span> <span
+                                        class="grow">Penugasan Enrollment</span>
                                 </x-nav-link>
                             </li>
                         @endif

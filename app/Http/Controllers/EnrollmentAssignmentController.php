@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\EnrollmentAssignment;
+use Illuminate\Support\Facades\Auth;
 
 class EnrollmentAssignmentController extends Controller
 {
@@ -13,7 +14,7 @@ class EnrollmentAssignmentController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $q = EnrollmentAssignment::with(['teknisi']);
 
         if ($user->role === User::ROLE_TEKNISI) {
@@ -30,18 +31,30 @@ class EnrollmentAssignmentController extends Controller
 
     public function create()
     {
-        // hanya kepala gudang
-        abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
-        $teknisi = User::where('role', User::ROLE_TEKNISI)->orderBy('name')->get(['id', 'name']);
+        // Hanya kepala gudang yang bisa akses
+        abort_unless(Auth::user()->role === User::ROLE_KEPALA_GUDANG, 403);
+
+        // Ambil ID teknisi yang sedang mengerjakan penugasan (status masih aktif)
+        $busyTeknisiIds = \App\Models\EnrollmentAssignment::whereIn('status', ['dikerjakan_teknisi'])
+            ->pluck('teknisi_id')
+            ->toArray();
+
+        // Ambil teknisi yang tidak sedang mengerjakan tugas
+        $teknisi = \App\Models\User::where('role', User::ROLE_TEKNISI)
+            ->whereNotIn('id', $busyTeknisiIds)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
         return view('penugasan_enrollment.create', compact('teknisi'));
     }
 
     public function store(Request $r)
     {
-        abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
+        abort_unless(Auth::user()->role === User::ROLE_KEPALA_GUDANG, 403);
 
         $val = $r->validate([
             'nama_barang'       => ['required', 'string', 'max:255'],
+            'nama_customer'     => ['required', 'string', 'max:255'],
             'kode_barang'       => ['nullable', 'string', 'max:100'],
             'qty'               => ['required', 'integer', 'min:1'],
             'timeline'          => ['required', 'date'],
@@ -56,7 +69,7 @@ class EnrollmentAssignmentController extends Controller
             $val['kode_barang'] = 'BRG-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
         }
 
-        $val['kepala_gudang_id'] = auth()->id();
+        $val['kepala_gudang_id'] = Auth::id();
         $val['poin'] = self::POIN[$val['tingkat_kesulitan']];
         $val['status'] = 'dikerjakan_teknisi';
 
@@ -68,7 +81,7 @@ class EnrollmentAssignmentController extends Controller
 
     public function edit(EnrollmentAssignment $assignment)
     {
-        abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
+        abort_unless(Auth::user()->role === User::ROLE_KEPALA_GUDANG, 403);
 
         // ❌ hanya boleh edit selama belum selesai
         abort_if($assignment->status !== 'dikerjakan_teknisi', 403, 'Penugasan sudah selesai dan tidak bisa diubah.');
@@ -80,13 +93,15 @@ class EnrollmentAssignmentController extends Controller
 
     public function update(Request $r, EnrollmentAssignment $assignment)
     {
-        abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
+        abort_unless(Auth::user()->role === User::ROLE_KEPALA_GUDANG, 403);
         abort_if($assignment->status !== 'dikerjakan_teknisi', 403, 'Penugasan sudah selesai dan tidak bisa diubah.');
 
         $val = $r->validate([
             'nama_barang'       => ['required', 'string', 'max:255'],
+            'nama_customer'     => ['required', 'string', 'max:255'],
             'kode_barang'       => ['required', 'string', 'max:100'],
             'qty'               => ['required', 'integer', 'min:1'],
+            'timeline'          => ['required', 'date'],
             'teknisi_id'        => ['required', 'exists:users,id'],
             'tingkat_kesulitan' => ['required', 'in:mudah,menengah,sulit'],
         ]);
@@ -101,7 +116,7 @@ class EnrollmentAssignmentController extends Controller
 
     public function destroy(EnrollmentAssignment $assignment)
     {
-        abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
+        abort_unless(Auth::user()->role === User::ROLE_KEPALA_GUDANG, 403);
         $assignment->delete();
 
         return back()->with(['type' => 'error', 'message' => 'Penugasan dihapus.']);

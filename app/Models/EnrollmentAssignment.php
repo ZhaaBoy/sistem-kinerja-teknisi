@@ -12,6 +12,7 @@ class EnrollmentAssignment extends Model
         'nama_barang',
         'kode_barang',
         'qty',
+        'nama_customer',
         'tingkat_kesulitan',
         'poin',
         'status',

@@ -1,43 +1,46 @@
 @extends('layouts.app')
-@section('title', 'Penugasan Enrollment')
+@section('title', 'Laporan Enrollment')
 @section('content')
     <x-alert />
     <div class="card bg-base-100 shadow p-6">
         <div class="flex justify-between mb-4">
-            <h2 class="text-lg font-semibold">Penugasan Enrollment</h2>
-            @if (auth()->user()->role === \App\Models\User::ROLE_KEPALA_GUDANG)
-                <a href="{{ route('penugasan-enrollment.create') }}"><x-button variant="primary">
-                        <span class="icon-[tabler--plus] mr-1"></span> Tambah
-                    </x-button></a>
-            @endif
+            <h2 class="text-lg font-semibold">Laporan Enrollment</h2>
         </div>
 
         @php
+            use Carbon\Carbon;
+
             $headers = [
+                'Customer',
                 'Barang',
                 'Kode',
                 'Qty',
                 'Teknisi',
                 'Kesulitan',
                 'Deskripsi',
-                'Timeline',
-                'Poin',
+                'Waktu Penyelesaian',
                 'Status',
                 'Aksi',
             ];
 
             $rows = $assignments
                 ->map(function ($a) {
-                    $aksi = view('penugasan_enrollment.partials.actions', compact('a'))->render();
+                    // Hitung durasi dari created_at ke completed_at
+                    $durasi = $a->completed_at
+                        ? $a->created_at->diff($a->completed_at)->format('%a Hari %h Jam %i Menit')
+                        : '-';
+
+                    $aksi = view('laporan_enrollment.partials.actions', compact('a'))->render();
+
                     return [
+                        'customer' => e($a->nama_customer ?? '-'),
                         'barang' => e($a->nama_barang),
                         'kode' => e($a->kode_barang),
                         'qty' => $a->qty,
                         'teknisi' => e($a->teknisi->name ?? '-'),
                         'kes' => ucfirst($a->tingkat_kesulitan),
                         'deskripsi' => e(Str::limit($a->deskripsi_hasil ?? '-', 40)),
-                        'timeline' => $a->timeline ? $a->timeline->format('d M Y H:i') : '-',
-                        'poin' => $a->poin,
+                        'waktu' => $durasi,
                         'status' => match ($a->status) {
                             'selesai' => view('components.badge', [
                                 'color' => 'success',

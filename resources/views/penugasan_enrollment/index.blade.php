@@ -14,6 +14,7 @@
 
         @php
             $headers = [
+                'Customer',
                 'Barang',
                 'Kode',
                 'Qty',
@@ -30,6 +31,7 @@
                 ->map(function ($a) {
                     $aksi = view('penugasan_enrollment.partials.actions', compact('a'))->render();
                     return [
+                        'customer' => e($a->nama_customer ?? '-'),
                         'barang' => e($a->nama_barang),
                         'kode' => e($a->kode_barang),
                         'qty' => $a->qty,

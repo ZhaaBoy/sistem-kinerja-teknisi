@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\EnrollmentAssignment;
+use Illuminate\Support\Facades\Auth;
 
 class LaporanController extends Controller
 {
-    public function index(Request $r)
+    public function index()
     {
-        $query = EnrollmentAssignment::with('teknisi')->orderByDesc('created_at');
+        $user = Auth::user();
 
-        // opsional: filter
-        if ($r->filled('status')) {
-            $query->where('status', $r->status);
-        }
+        $query = EnrollmentAssignment::with('teknisi')
+            ->where('status', 'selesai')
+            ->latest();
 
-        if ($r->filled('teknisi_id')) {
-            $query->where('teknisi_id', $r->teknisi_id);
+        // 👇 Filter hanya untuk teknisi
+        if ($user->role === User::ROLE_TEKNISI) {
+            $query->where('teknisi_id', $user->id);
         }
 
         $assignments = $query->paginate(10);
@@ -28,9 +30,9 @@ class LaporanController extends Controller
 
     public function cetak(EnrollmentAssignment $assignment)
     {
-        $pdf = PDF::loadView('laporan_enrollment.pdf', compact('assignment'))
-            ->setPaper('A4', 'portrait');
+        $pdf = \PDF::loadView('laporan_enrollment.pdf', compact('assignment'));
+        $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream("Laporan-{$assignment->kode_barang}.pdf");
+        return $pdf->stream('Laporan_' . $assignment->kode_barang . '.pdf');
     }
 }

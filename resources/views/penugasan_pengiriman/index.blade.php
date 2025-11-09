@@ -17,12 +17,13 @@
         </div>
 
         @php
-            $headers = ['No', 'Barang', 'Qty', 'Teknisi', 'No Resi', 'Jasa Kirim', 'Aksi'];
+            $headers = ['No', 'Customer', 'Barang', 'Qty', 'Teknisi', 'No Resi', 'Jasa Kirim', 'Aksi'];
             $rows = $shipments
                 ->map(function ($ship, $i) {
                     $aksi = view('penugasan_pengiriman.partials.actions', compact('ship'))->render();
                     return [
                         $i + 1,
+                        e($ship->penugasan->nama_customer ?? '-'),
                         e($ship->penugasan->nama_barang ?? '-'),
                         e($ship->penugasan->qty ?? '-'),
                         e($ship->penugasan->teknisi->name ?? '-'),

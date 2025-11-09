@@ -5,10 +5,11 @@
         <form method="POST" action="{{ route('penugasan-enrollment.update', $assignment->id) }}" class="space-y-4">
             @csrf
             @method('PUT')
-
+            <x-input label="Nama Customer" name="nama_customer" :value="$assignment->nama_customer" required />
             <x-input label="Nama Barang" name="nama_barang" :value="$assignment->nama_barang" required />
             <x-input label="Kode Barang" name="kode_barang" :value="$assignment->kode_barang" readonly />
             <x-input label="Qty" name="qty" type="number" min="1" :value="$assignment->qty" required />
+            <x-input label="Timeline (Deadline)" name="timeline" type="datetime-local" :value="$assignment->timeline ? $assignment->timeline->format('Y-m-d\TH:i') : ''" required />
 
             <div>
                 <label class="block mb-1">Teknisi</label>

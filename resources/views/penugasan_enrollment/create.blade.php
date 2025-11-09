@@ -4,7 +4,7 @@
     <div class="card bg-base-100 shadow p-6 max-w-2xl">
         <form method="POST" action="{{ route('penugasan-enrollment.store') }}" class="space-y-4">
             @csrf
-
+            <x-input label="Nama Customer" name="nama_customer" required />
             <x-input label="Nama Barang" name="nama_barang" required />
             <x-input label="Kode Barang" name="kode_barang" id="kode_barang" readonly />
             <x-input label="Qty" name="qty" type="number" min="1" required />
@@ -16,6 +16,11 @@
                     <option value="" hidden>Pilih teknisi</option>
                     @foreach ($teknisi as $t)
                         <option value="{{ $t->id }}">{{ $t->name }}</option>
+                        @if ($teknisi->isEmpty())
+                            <div class="text-sm text-red-600 mt-2">
+                                Semua teknisi sedang mengerjakan penugasan. Silakan tunggu hingga salah satu selesai.
+                            </div>
+                        @endif
                     @endforeach
                 </select>
             </div>
