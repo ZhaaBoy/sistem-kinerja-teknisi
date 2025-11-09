@@ -8,6 +8,7 @@
             <x-input label="Nama Barang" name="nama_barang" required />
             <x-input label="Kode Barang" name="kode_barang" id="kode_barang" readonly />
             <x-input label="Qty" name="qty" type="number" min="1" required />
+            <x-input label="Timeline (Deadline)" name="timeline" type="datetime-local" required />
 
             <div>
                 <label class="block mb-1">Teknisi</label>

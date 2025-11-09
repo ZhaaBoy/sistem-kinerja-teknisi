@@ -14,13 +14,17 @@ class EnrollmentAssignmentController extends Controller
     public function index()
     {
         $user = auth()->user();
-
         $q = EnrollmentAssignment::with(['teknisi']);
+
         if ($user->role === User::ROLE_TEKNISI) {
             $q->where('teknisi_id', $user->id);
         }
-        $assignments = $q->latest()->paginate(10);
 
+        if ($user->role === User::ROLE_HELPER) {
+            $q->where('status', 'proses_packing');
+        }
+
+        $assignments = $q->latest()->paginate(10);
         return view('penugasan_enrollment.index', compact('assignments'));
     }
 
@@ -38,9 +42,9 @@ class EnrollmentAssignmentController extends Controller
 
         $val = $r->validate([
             'nama_barang'       => ['required', 'string', 'max:255'],
-            // ❌ hapus 'required' pada kode_barang agar tidak error
             'kode_barang'       => ['nullable', 'string', 'max:100'],
             'qty'               => ['required', 'integer', 'min:1'],
+            'timeline'          => ['required', 'date'],
             'teknisi_id'        => ['required', 'exists:users,id'],
             'tingkat_kesulitan' => ['required', 'in:mudah,menengah,sulit'],
         ]);

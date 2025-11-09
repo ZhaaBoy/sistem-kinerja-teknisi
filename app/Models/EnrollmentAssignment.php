@@ -17,9 +17,13 @@ class EnrollmentAssignment extends Model
         'status',
         'deskripsi_hasil',
         'completed_at',
+        'timeline'
     ];
 
-    protected $casts = ['completed_at' => 'datetime'];
+    protected $casts = [
+        'timeline' => 'datetime',
+        'completed_at' => 'datetime',
+    ];
 
     // 🔹 Relasi
     public function kepalaGudang()

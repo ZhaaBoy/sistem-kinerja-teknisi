@@ -14,8 +14,7 @@ class HasilEnrollmentController extends Controller
         abort_unless(auth()->user()->role === User::ROLE_TEKNISI, 403);
 
         $assignments = EnrollmentAssignment::where('teknisi_id', auth()->id())
-            ->latest()
-            ->get();
+            ->latest()->paginate(10);
 
         return view('hasil_enrollment.index', compact('assignments'));
     }
@@ -32,25 +31,34 @@ class HasilEnrollmentController extends Controller
     public function store(Request $r, EnrollmentAssignment $assignment)
     {
         abort_unless(auth()->user()->role === User::ROLE_TEKNISI, 403);
-        abort_unless($assignment->teknisi_id === auth()->id(), 403);
-        abort_if($assignment->status === 'selesai', 403);
 
-        $data = $r->validate([
-            'deskripsi_hasil' => ['required', 'string', 'min:5'],
+        $val = $r->validate([
+            'deskripsi_hasil' => ['required', 'string'],
         ]);
 
-        $assignment->update([
-            'deskripsi_hasil' => $data['deskripsi_hasil'],
-            'status'          => 'selesai',
-            'completed_at'    => now(),
-        ]);
+        $assignment->deskripsi_hasil = $val['deskripsi_hasil'];
+        $assignment->completed_at = now();
 
-        // tambah poin teknisi (nullable safe)
-        $user = auth()->user();
-        $user->score = ($user->score ?? 0) + ($assignment->poin ?? 0);
-        $user->save();
+        // Cek keterlambatan
+        if ($assignment->timeline && now()->gt($assignment->timeline)) {
+            $assignment->poin = $assignment->poin / 2;
+        }
 
-        return redirect()->route('penugasan-enrollment.index')
-            ->with(['type' => 'success', 'message' => 'Hasil disimpan dan penugasan selesai.']);
+        // Status berubah jadi PROSES PACKING → role helper
+        $assignment->status = 'proses_packing';
+        $assignment->save();
+
+        return redirect()->route('hasil-enrollment.index')
+            ->with(['type' => 'success', 'message' => 'Hasil pekerjaan disimpan. Status berubah ke Proses Packing.']);
+    }
+
+    public function selesaiPacking(EnrollmentAssignment $assignment)
+    {
+        abort_unless(auth()->user()->role === User::ROLE_HELPER, 403);
+        abort_unless($assignment->status === 'proses_packing', 403);
+
+        $assignment->update(['status' => 'selesai']);
+
+        return back()->with(['type' => 'success', 'message' => 'Packing selesai. Status penugasan berubah menjadi Selesai.']);
     }
 }

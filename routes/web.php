@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HasilEnrollmentController;
 use App\Http\Controllers\ShipmentAssignmentController;
@@ -22,20 +23,23 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class);
     });
 
-    // Penugasan Enrollment (KG & Teknisi lihat sesuai peran)
-    Route::resource('penugasan-enrollment', EnrollmentAssignmentController::class)
-        ->parameters(['penugasan-enrollment' => 'assignment']);
-
-    // Aksi teknisi menyelesaikan tugas & input hasil
-    Route::get('hasil-enrollment', [HasilEnrollmentController::class, 'index'])
-        ->name('hasil-enrollment.index');
-    Route::get('hasil-enrollment/{assignment}/create', [HasilEnrollmentController::class, 'create'])
-        ->name('hasil-enrollment.create');
-    Route::post('hasil-enrollment/{assignment}', [HasilEnrollmentController::class, 'store'])
-        ->name('hasil-enrollment.store');
-
-    // Penugasan Pengiriman (buat dari tugas yang sudah selesai)
-    Route::resource('penugasan-pengiriman', ShipmentAssignmentController::class)
-        ->parameters(['penugasan-pengiriman' => 'shipment'])
-        ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::middleware('role:kepala_gudang,teknisi,helper')->group(function () {
+        Route::resource('penugasan-enrollment', EnrollmentAssignmentController::class)
+            ->parameters(['penugasan-enrollment' => 'assignment']);
+        // Aksi teknisi menyelesaikan tugas & input hasil
+        Route::get('hasil-enrollment', [HasilEnrollmentController::class, 'index'])
+            ->name('hasil-enrollment.index');
+        Route::get('hasil-enrollment/{assignment}/create', [HasilEnrollmentController::class, 'create'])
+            ->name('hasil-enrollment.create');
+        Route::post('hasil-enrollment/{assignment}', [HasilEnrollmentController::class, 'store'])
+            ->name('hasil-enrollment.store');
+        // Penugasan Pengiriman (buat dari tugas yang sudah selesai)
+        Route::resource('penugasan-pengiriman', ShipmentAssignmentController::class)
+            ->parameters(['penugasan-pengiriman' => 'shipment'])
+            ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::post('/hasil-enrollment/{assignment}/selesai-packing', [HasilEnrollmentController::class, 'selesaiPacking'])
+            ->name('hasil-enrollment.selesaiPacking');
+        Route::get('/laporan-enrollment', [LaporanController::class, 'index'])->name('laporan-enrollment.index');
+        Route::get('/laporan-enrollment/cetak/{assignment}', [LaporanController::class, 'cetak'])->name('laporan-enrollment.cetak');
+    });
 });

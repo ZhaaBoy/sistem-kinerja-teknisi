@@ -67,7 +67,7 @@
                                 </x-nav-link>
                             </li>
                             <li>
-                                <x-nav-link href="#" :active="request()->routeIs('laporan-enrollment.*')">
+                                <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
                                     <i class="chart bar icon"></i>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
@@ -89,7 +89,7 @@
                                 </x-nav-link>
                             </li>
                             <li>
-                                <x-nav-link href="#" :active="request()->routeIs('laporan-enrollment.*')">
+                                <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
                                     <i class="chart line icon"></i>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
@@ -99,7 +99,7 @@
                         {{-- ROLE HELPER --}}
                         @if (auth()->user()->role === 'helper')
                             <li>
-                                <x-nav-link href="#" :active="request()->routeIs('laporan-enrollment.*')">
+                                <x-nav-link href="{{ route('laporan-enrollment.index') }}" :active="request()->routeIs('laporan-enrollment.*')">
                                     <i class="chart pie icon"></i>
                                     <span class="grow">Laporan Enrollment</span>
                                 </x-nav-link>
