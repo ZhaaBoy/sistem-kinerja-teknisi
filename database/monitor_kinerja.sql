@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 09, 2025 at 07:03 PM
+-- Generation Time: Nov 10, 2025 at 03:29 AM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -74,7 +74,7 @@ CREATE TABLE `enrollment_assignments` (
 --
 
 INSERT INTO `enrollment_assignments` (`id`, `kepala_gudang_id`, `teknisi_id`, `nama_barang`, `nama_customer`, `kode_barang`, `qty`, `timeline`, `tingkat_kesulitan`, `poin`, `status`, `deskripsi_hasil`, `completed_at`, `created_at`, `updated_at`) VALUES
-(6, 2, 3, 'Laptop Acer FH7564', 'Hifzha', 'BRG-2190', 2, '2025-11-11 02:03:00', 'menengah', 10, 'dikerjakan_teknisi', NULL, NULL, '2025-11-09 19:03:18', '2025-11-09 19:03:18');
+(6, 2, 3, 'Laptop Acer FH7564', 'Hifzha', 'BRG-2190', 2, '2025-11-11 02:03:00', 'menengah', 10, 'selesai', 'sdasdasdasdasdasd', '2025-11-10 02:50:22', '2025-11-09 19:03:18', '2025-11-10 02:52:52');
 
 -- --------------------------------------------------------
 
@@ -175,11 +175,9 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('2t4hqYmuxZgCqwShmQuFprsUVMZMIJ05Hykna8mL', 4, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUnI5SnBjZjlybWhzMDc5cUtyZ3VYS1pMcTJ6R21KWWJKdnhnd0VqbiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjQ7fQ==', 1762713425),
-('8MGLYwLH8Rf5Gd0rPoWEk1S0aANtkUGMy0OYWtBT', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiUXJkSDFacFg4b09BQWduNGd3QkxGVUMyMGVwek9tUUtJZk1xTFVCTiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjQyOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvcGVudWdhc2FuLWVucm9sbG1lbnQiO3M6NToicm91dGUiO3M6MjY6InBlbnVnYXNhbi1lbnJvbGxtZW50LmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1762714999),
-('d7NyOkDwg8V52BfA90sibABJRF4jd5sT9Yg8rXjO', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicjhrU0xlazNPUUVvMVZWaUhNYmJGcGtWUkJYOTNhT2czOHF0NDdOeCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sYXBvcmFuLWVucm9sbG1lbnQiO3M6NToicm91dGUiO3M6MjQ6ImxhcG9yYW4tZW5yb2xsbWVudC5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1762705543),
-('rjuxrFwxMm0t7YrAH7EpTVTdgf3QoOKLPHwd1Zml', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiT3dpU2JQTGhDU3RMU3dZZkprOTRHZmJxQlF5d2hMYWZMUGhWUjI3cyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0MDoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2xhcG9yYW4tZW5yb2xsbWVudCI7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjI3OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1762705432),
-('u4foaSApOSZD4Y7OVClMVJMZ43k6essGdHHbfKRR', 8, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiY3FpcUVOVU9wMUlXUEJ4OTRLZFhPSVdnU3F2cVBzQlFqUjJCamVhaiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjg7fQ==', 1762713962);
+('8G5kDxhxNTqyUzRI6gD4RYQqQYSsLdi9jS3EsgE9', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiWm5nS0gzZE1DQnBZWkN2STJsV3lJMjZ0MW5MbEJDakZhS1RsZFdaNCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sYXBvcmFuLWVucm9sbG1lbnQiO3M6NToicm91dGUiO3M6MjQ6ImxhcG9yYW4tZW5yb2xsbWVudC5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjA6e31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToyO30=', 1762745010),
+('NHwSDTnfaAums4wgO7ZYG0FgK4Yo6IoXBUhLYTEK', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiR3BOUFdDVVFPbnpDaVViaWJ5dkJsUHNTamlMWFdvNkpDMzNKNVVLYSI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9oYXNpbC1lbnJvbGxtZW50IjtzOjU6InJvdXRlIjtzOjIyOiJoYXNpbC1lbnJvbGxtZW50LmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjM7fQ==', 1762745075),
+('NIhIdbzoL36K8hCG5ithV45z076l3lwAzxIribxr', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiblJrS0JIOTMzVnVCTEJtYkhaaUppeGRacHEwRkkzbjZBdmdaMUJQOCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wZW51Z2FzYW4tZW5yb2xsbWVudCI7czo1OiJyb3V0ZSI7czoyNjoicGVudWdhc2FuLWVucm9sbG1lbnQuaW5kZXgiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo2O30=', 1762743172);
 
 -- --------------------------------------------------------
 
@@ -195,6 +193,13 @@ CREATE TABLE `shipment_assignments` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `shipment_assignments`
+--
+
+INSERT INTO `shipment_assignments` (`id`, `enrollment_assignment_id`, `no_resi`, `jasa_kirim`, `created_at`, `updated_at`) VALUES
+(5, 6, '23482348032432', 'JNE', '2025-11-10 03:20:24', '2025-11-10 03:20:24');
 
 -- --------------------------------------------------------
 
@@ -222,7 +227,8 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `score`, `rememb
 (1, 'Administrator', 'admin@gmail.com', '$2y$12$7zX0WwZ6.hCEiCBtAfWOM.OkFl5u6XIMnGzjSL3uuXAFXmWnjJ.q.', 'admin', NULL, NULL, '2025-11-09 18:59:48', '2025-11-09 18:59:48'),
 (2, 'Kepala Gudang', 'kepala@gmail.com', '$2y$12$DLXIwQliTW80X2BQ9xOI1erZ3i1892jf79EKLNw..h2XxIkJ0FgTa', 'kepala_gudang', NULL, NULL, '2025-11-09 18:59:48', '2025-11-09 18:59:48'),
 (3, 'Teknisi 1', 'teknisi@gmail.com', '$2y$12$c5C.vXsqRfuTLn3nRs5zY.5YycfAupiNoOKae5Roy73G3c9Ee.Rv6', 'teknisi', NULL, NULL, '2025-11-09 18:59:48', '2025-11-09 18:59:48'),
-(4, 'Teknisi 2', 'teknisi2@gmail.com', '$2y$12$9dP9qt1m9QZNnSO41YFDzuyZ4srgkQZZZMT.CbeCF62qRjzmbOO1G', 'teknisi', NULL, NULL, '2025-11-09 18:59:48', '2025-11-09 18:59:48');
+(4, 'Teknisi 2', 'teknisi2@gmail.com', '$2y$12$9dP9qt1m9QZNnSO41YFDzuyZ4srgkQZZZMT.CbeCF62qRjzmbOO1G', 'teknisi', NULL, NULL, '2025-11-09 18:59:48', '2025-11-09 18:59:48'),
+(6, 'Helper', 'helper@gmail.com', '$2y$12$P744JmqO.XLUfQpUkrc8i.B4R34qnYKM3eEw43cNnqO2KJe8L2ilC', 'helper', NULL, NULL, '2025-11-10 02:52:22', '2025-11-10 02:52:22');
 
 --
 -- Indexes for dumped tables
@@ -328,13 +334,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `shipment_assignments`
 --
 ALTER TABLE `shipment_assignments`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
