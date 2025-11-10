@@ -117,7 +117,7 @@
                     </ul>
                 </div>
 
-                <!-- Tombol Logout di bawah -->
+                {{-- <!-- Tombol Logout di bawah -->
                 <div class="border-t border-base-content/20 p-3">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -126,7 +126,7 @@
                             <span>Keluar</span>
                         </button>
                     </form>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
