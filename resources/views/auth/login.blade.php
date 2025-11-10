@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Login | PT. Complus System</title>
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('template/assets/img/favicon/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.png') }}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&ampdisplay=swap"
@@ -25,10 +25,12 @@
             <div
                 class="bg-base-100 shadow-base-300/20 z-1 sm:min-w-md w-full space-y-6 rounded-xl p-6 shadow-md lg:p-8">
 
-                <div>
-                    <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Sign in</h3>
-                    <p class="text-base-content/80">Masukkan kredensial Anda untuk melanjutkan.</p>
+                <div class="flex flex-col items-center justify-center text-center mb-4">
+                    <img src="{{ asset('logo.png') }}" alt="Logo" width="120" height="120"
+                        class=" w-24 h-24 object-contain">
+                    <h2 class="text-base-content text-2xl font-semibold">PT. Complus Sistem Solusi</h2>
                 </div>
+
 
                 @if ($errors->any())
                     <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
@@ -37,6 +39,7 @@
                 @endif
 
                 <div class="space-y-4">
+                    {{-- <h3 class="text-base-content mb-1.5 text-lg font-semibold">Sign in</h3> --}}
                     {{-- ✅ FORM LOGIN --}}
                     <form class="mb-4 space-y-4" action="{{ route('login') }}" method="POST">
                         @csrf

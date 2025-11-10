@@ -23,7 +23,7 @@ class HasilEnrollmentController extends Controller
     {
         // teknisi hanya boleh input untuk tugas miliknya & yang belum selesai
         abort_unless(Auth::user()->role === User::ROLE_TEKNISI, 403);
-        abort_unless($assignment->teknisi_id === Auth::user()->id(), 403);
+        abort_unless($assignment->teknisi_id === Auth::id(), 403);
         abort_if($assignment->status === 'selesai', 403);
 
         return view('hasil_enrollment.create', compact('assignment'));

@@ -17,7 +17,7 @@
         </div>
 
         @php
-            $headers = ['No', 'Customer', 'Barang', 'Qty', 'Teknisi', 'No Resi', 'Jasa Kirim', 'Aksi'];
+            $headers = ['No', 'Customer', 'Barang', 'Qty', 'Teknisi', 'Tanggal Kirim', 'No Resi', 'Jasa Kirim', 'Aksi'];
             $rows = $shipments
                 ->map(function ($ship, $i) {
                     $aksi = view('penugasan_pengiriman.partials.actions', compact('ship'))->render();
@@ -27,6 +27,7 @@
                         e($ship->penugasan->nama_barang ?? '-'),
                         e($ship->penugasan->qty ?? '-'),
                         e($ship->penugasan->teknisi->name ?? '-'),
+                        $ship->created_at ? \Carbon\Carbon::parse($ship->created_at)->translatedFormat('d F Y') : '-',
                         e($ship->no_resi ?? '-'),
                         e($ship->jasa_kirim ?? '-'),
                         $aksi,

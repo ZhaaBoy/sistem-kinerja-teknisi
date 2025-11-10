@@ -7,7 +7,7 @@
     <title>@yield('title', 'Dashboard')</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('template/assets/img/favicon/favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo.png') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,8 +46,8 @@
             <footer class="mx-auto w-full max-w-[1280px] px-6 py-3.5 text-sm">
                 <div class="flex items-center justify-between gap-3 max-lg:flex-col">
                     <p class="text-base-content text-center">
-                        &copy; {{ date('Y') }} <a href="https://flyonui.com/" class="text-primary">ZhaaStore</a>,
-                        Chamber Of Secret Team.
+                        &copy; {{ date('Y') }} <a href="#" class="text-primary">ZhaaStore</a>,
+
                     </p>
                     <div class="justify-enter flex items-center gap-4 max-sm:flex-col">
                         <a href="#" class="link link-primary link-animated font-normal">Linkedin</a>
