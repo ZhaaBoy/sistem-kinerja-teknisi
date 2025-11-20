@@ -19,14 +19,6 @@
             margin-bottom: 20px;
         }
 
-        .header img {
-            width: 70px;
-            height: auto;
-            position: absolute;
-            left: 40px;
-            top: 20px;
-        }
-
         .title {
             font-size: 16px;
             font-weight: bold;
@@ -39,14 +31,10 @@
             color: #555;
         }
 
-        .info {
-            margin: 20px 0;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
         th,
@@ -62,30 +50,34 @@
         }
 
         .footer {
-            margin-top: 50px;
+            margin-top: 40px;
             text-align: right;
             font-size: 12px;
         }
 
         .signature {
-            margin-top: 40px;
+            margin-top: 50px;
             text-align: right;
-        }
-
-        .signature p {
-            margin: 2px 0;
         }
     </style>
 </head>
 
 <body>
+
     <div class="header">
-        {{-- Ganti logo sesuai kebutuhan --}}
-        {{-- <img src="{{ public_path('images/logo.png') }}" alt="Logo"> --}}
         <div class="title">Laporan Penilaian Kinerja Teknisi</div>
-        <div class="subtitle">Periode: {{ \Carbon\Carbon::parse($start)->translatedFormat('d F Y') }} -
-            {{ \Carbon\Carbon::parse($end)->translatedFormat('d F Y') }}</div>
+        <div class="subtitle">
+            Periode:
+            {{ \Carbon\Carbon::parse($start)->translatedFormat('d F Y') }}
+            -
+            {{ \Carbon\Carbon::parse($end)->translatedFormat('d F Y') }}
+        </div>
     </div>
+
+    @php
+        // Total poin untuk persentase per teknisi
+        $totalPoin = max($stats->sum('poin'), 1);
+    @endphp
 
     <table>
         <thead>
@@ -99,44 +91,32 @@
                 <th>Persentase (%)</th>
             </tr>
         </thead>
-        <tbody>
-            @php
-                $grouped = $assignments->groupBy('teknisi_id');
-                $no = 1;
-                $totalPoin = $assignments->sum('poin');
-            @endphp
 
-            @foreach ($grouped as $rows)
-                @php
-                    $nama = $rows->first()->teknisi->name ?? '-';
-                    $jumlah = $rows->count();
-                    $selesai = $rows->where('status', 'selesai')->count();
-                    $dikerjakan = $rows->where('status', 'dikerjakan_teknisi')->count();
-                    $poin = $rows->sum('poin');
-                    $persen = $totalPoin > 0 ? round(($poin / $totalPoin) * 100, 2) : 0;
-                @endphp
+        <tbody>
+            @foreach ($stats as $index => $s)
                 <tr>
-                    <td>{{ $no++ }}</td>
-                    <td>{{ $nama }}</td>
-                    <td>{{ $jumlah }}</td>
-                    <td>{{ $selesai }}</td>
-                    <td>{{ $dikerjakan }}</td>
-                    <td>{{ $poin }}</td>
-                    <td>{{ $persen }}%</td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $s['nama'] }}</td>
+                    <td>{{ $s['jumlah'] }}</td>
+                    <td>{{ $s['selesai'] }}</td>
+                    <td>{{ $s['dikerjakan'] }}</td>
+                    <td>{{ $s['poin'] }}</td>
+                    <td>{{ round(($s['poin'] / $totalPoin) * 100, 2) }}%</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
     <div class="footer">
-        <p>Tanggal Cetak: {{ now()->translatedFormat('d F Y H:i') }} WIB</p>
+        Tanggal Cetak: {{ now()->translatedFormat('d F Y H:i') }} WIB
     </div>
 
     <div class="signature">
         <p><strong>Kepala Gudang</strong></p>
         <br><br><br>
-        <p><u>{{ auth()->user()->name ?? '__________________' }}</u></p>
+        <p><u>{{ auth()->user()->name ?? '_________________' }}</u></p>
     </div>
+
 </body>
 
 </html>

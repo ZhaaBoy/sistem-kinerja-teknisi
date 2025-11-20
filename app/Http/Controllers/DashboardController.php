@@ -40,6 +40,7 @@ class DashboardController extends Controller
                 'poin' => $rows->sum('poin'),
             ];
         });
+        $stats = $stats->sortByDesc('poin');
 
         // Data untuk Chart
         $chartLabels = $stats->pluck('nama');
@@ -70,14 +71,33 @@ class DashboardController extends Controller
 
     public function cetak(Request $r)
     {
-        $start = $r->input('start_date');
-        $end = $r->input('end_date');
+        $start = Carbon::parse($r->start_date)->startOfDay();
+        $end = Carbon::parse($r->end_date)->endOfDay();
 
         $assignments = EnrollmentAssignment::with('teknisi')
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
-        $pdf = \PDF::loadView('cetaknilai', compact('assignments', 'start', 'end'))->setPaper('a4', 'portrait');
+        // === SAMA seperti dashboard ===
+        $grouped = $assignments->groupBy('teknisi_id');
+
+        $stats = $grouped->map(function ($rows) {
+            return [
+                'nama' => $rows->first()->teknisi->name ?? '-',
+                'jumlah' => $rows->count(),
+                'selesai' => $rows->where('status', 'selesai')->count(),
+                'dikerjakan' => $rows->where('status', 'dikerjakan_teknisi')->count(),
+                'poin' => $rows->sum('poin'),
+            ];
+        });
+        $stats = $stats->sortByDesc('poin');
+
+        $pdf = \PDF::loadView('cetaknilai', [
+            'stats' => $stats,
+            'start' => $start->format('d M Y'),
+            'end' => $end->format('d M Y'),
+        ])->setPaper('a4', 'portrait');
+
         return $pdf->stream('Laporan-Nilai-' . now()->format('d-m-Y') . '.pdf');
     }
 }

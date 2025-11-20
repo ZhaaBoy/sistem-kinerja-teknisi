@@ -41,5 +41,7 @@ Route::middleware('auth')->group(function () {
             ->name('hasil-enrollment.selesaiPacking');
         Route::get('/laporan-enrollment', [LaporanController::class, 'index'])->name('laporan-enrollment.index');
         Route::get('/laporan-enrollment/cetak/{assignment}', [LaporanController::class, 'cetak'])->name('laporan-enrollment.cetak');
+        Route::get('/laporan-enrollment/cetak-semua', [LaporanController::class, 'cetakSemua'])
+            ->name('laporan-enrollment.cetak-semua');
     });
 });
