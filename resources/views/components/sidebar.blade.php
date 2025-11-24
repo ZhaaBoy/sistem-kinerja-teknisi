@@ -58,7 +58,7 @@
                             </li>
                             <li>
                                 <x-nav-link :href="route('barangs.index')" :active="request()->routeIs('barangs.*')">
-                                    <span class="icon-[tabler-box] size-4.5"></span>
+                                    <span class="icon-[tabler--layout-grid] size-4.5"></span>
                                     <span class="grow">Kelola Barang</span>
                                 </x-nav-link>
                             </li>
