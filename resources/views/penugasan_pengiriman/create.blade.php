@@ -11,7 +11,10 @@
                     <option value="" hidden>Pilih penugasan selesai</option>
                     @foreach ($selesai as $s)
                         <option value="{{ $s->id }}">
-                            #{{ $s->id }} — {{ $s->nama_barang }} (qty: {{ $s->qty }})
+                            {{ $s->barang->nama_barang }}
+                            ({{ $s->barang->kode_barang }})
+                            — {{ $s->customer->nama_customer }}
+                            — Qty: {{ $s->qty }}
                         </option>
                     @endforeach
                 </select>

@@ -50,6 +50,18 @@
                                     <span class="grow">Kelola User</span>
                                 </x-nav-link>
                             </li>
+                            <li>
+                                <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
+                                    <span class="icon-[tabler--users] size-4.5"></span>
+                                    <span class="grow">Kelola Customer</span>
+                                </x-nav-link>
+                            </li>
+                            <li>
+                                <x-nav-link :href="route('barangs.index')" :active="request()->routeIs('barangs.*')">
+                                    <span class="icon-[tabler-box] size-4.5"></span>
+                                    <span class="grow">Kelola Barang</span>
+                                </x-nav-link>
+                            </li>
                         @endif
 
                         {{-- ROLE KEPALA GUDANG --}}

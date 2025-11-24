@@ -34,7 +34,7 @@ class LaporanController extends Controller
         $pdf = \PDF::loadView('laporan_enrollment.pdf', compact('assignment'));
         $pdf->setPaper('A4', 'portrait');
 
-        return $pdf->stream('Laporan_' . $assignment->kode_barang . '.pdf');
+        return $pdf->stream('Laporan_' . $assignment->barang->kode_barang . '.pdf');
     }
 
     public function cetakSemua(Request $r)

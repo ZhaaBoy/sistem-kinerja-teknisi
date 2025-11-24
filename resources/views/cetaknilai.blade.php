@@ -19,22 +19,36 @@
             margin-bottom: 20px;
         }
 
-        .title {
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 10px;
+        .chart-table {
+            width: 100%;
+            margin-top: 25px;
+            display: table;
+            /* WAJIB: untuk DomPDF */
         }
 
-        .subtitle {
-            font-size: 13px;
-            color: #555;
+        .chart-row {
+            display: table-row;
+        }
+
+        .chart-cell {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .chart-cell img {
+            width: 100%;
+            border: 1px solid #ddd;
+            padding: 6px;
+            border-radius: 6px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         th,
@@ -60,10 +74,12 @@
             text-align: right;
         }
     </style>
+
 </head>
 
 <body>
 
+    {{-- Header --}}
     <div class="header">
         <div class="title">Laporan Penilaian Kinerja Teknisi</div>
         <div class="subtitle">
@@ -74,11 +90,38 @@
         </div>
     </div>
 
+    {{-- Perhitungan total poin --}}
     @php
-        // Total poin untuk persentase per teknisi
         $totalPoin = max($stats->sum('poin'), 1);
     @endphp
 
+    <div class="chart-table">
+        <div class="chart-row">
+
+            {{-- BAR CHART --}}
+            <div class="chart-cell">
+                <h4>Grafik Total Poin Teknisi</h4>
+                @if (!empty($chart_bar))
+                    <img src="{{ $chart_bar }}" alt="Bar Chart">
+                @else
+                    <p><i>Tidak ada data grafik</i></p>
+                @endif
+            </div>
+
+            {{-- PIE CHART --}}
+            <div class="chart-cell">
+                <h4>Persentase Poin (%)</h4>
+                @if (!empty($chart_pie))
+                    <img src="{{ $chart_pie }}" alt="Pie Chart">
+                @else
+                    <p><i>Tidak ada data grafik</i></p>
+                @endif
+            </div>
+
+        </div>
+    </div>
+
+    {{-- TABEL --}}
     <table>
         <thead>
             <tr>

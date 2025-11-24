@@ -14,6 +14,17 @@ Route::get('/', fn() => to_route('dashboard'));
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/api/search/customers', function () {
+    $q = request('q');
+    return \App\Models\Customer::where('nama_customer', 'like', "%$q%")
+        ->limit(10)->get(['id', 'nama_customer']);
+})->name('api.customers.search');
+
+Route::get('/api/search/barangs', function () {
+    $q = request('q');
+    return \App\Models\Barang::where('nama_barang', 'like', "%$q%")
+        ->limit(10)->get(['id', 'nama_barang', 'kode_barang']);
+})->name('api.barangs.search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -21,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin')->group(function () {
         Route::resource('users', UserController::class);
+        Route::resource('customers', \App\Http\Controllers\CustomerController::class);
+        Route::resource('barangs', \App\Http\Controllers\BarangController::class);
     });
 
     Route::middleware('role:kepala_gudang,teknisi,helper')->group(function () {

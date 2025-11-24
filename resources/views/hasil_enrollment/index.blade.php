@@ -10,25 +10,36 @@
         @php
             use Carbon\Carbon;
 
-            $headers = ['Barang', 'Kode', 'Qty', 'Kesulitan', 'Poin', 'Deskripsi', 'Timeline', 'Status', 'Aksi'];
+            $headers = [
+                'Customer',
+                'Barang',
+                'Kode',
+                'Qty',
+                'Kesulitan',
+                'Poin',
+                'Deskripsi',
+                'Timeline',
+                'Status',
+                'Aksi',
+            ];
 
             $rows = $assignments
                 ->map(function ($a) {
-                    // Tombol aksi diambil dari partial agar bisa menyesuaikan role (teknisi/helper)
                     $aksi = view('hasil_enrollment.partials.actions', compact('a'))->render();
 
-                    // Badge status
                     $statusBadge = match ($a->status) {
                         'selesai' => view('components.badge', [
                             'color' => 'success',
                             'soft' => true,
                             'slot' => 'Selesai',
                         ])->render(),
+
                         'proses_packing' => view('components.badge', [
                             'color' => 'info',
                             'soft' => true,
                             'slot' => 'Proses Packing',
                         ])->render(),
+
                         default => view('components.badge', [
                             'color' => 'warning',
                             'soft' => true,
@@ -36,7 +47,6 @@
                         ])->render(),
                     };
 
-                    // Format timeline
                     $timeline = $a->timeline
                         ? (is_string($a->timeline)
                             ? Carbon::parse($a->timeline)->format('d M Y H:i')
@@ -44,8 +54,9 @@
                         : '-';
 
                     return [
-                        'barang' => e($a->nama_barang),
-                        'kode' => e($a->kode_barang),
+                        'customer' => e($a->customer->nama_customer ?? '-'),
+                        'barang' => e($a->barang->nama_barang ?? '-'),
+                        'kode' => e($a->barang->kode_barang ?? '-'),
                         'qty' => $a->qty,
                         'kes' => ucfirst($a->tingkat_kesulitan),
                         'poin' => $a->poin,

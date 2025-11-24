@@ -41,9 +41,9 @@
                     $aksi = view('laporan_enrollment.partials.actions', compact('a'))->render();
 
                     return [
-                        'customer' => e($a->nama_customer ?? '-'),
-                        'barang' => e($a->nama_barang),
-                        'kode' => e($a->kode_barang),
+                        'customer' => e($a->customer->nama_customer ?? '-'),
+                        'barang' => e($a->barang->nama_barang),
+                        'kode' => e($a->barang->kode_barang),
                         'qty' => $a->qty,
                         'teknisi' => e($a->teknisi->name ?? '-'),
                         'kes' => ucfirst($a->tingkat_kesulitan),

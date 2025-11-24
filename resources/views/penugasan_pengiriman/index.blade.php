@@ -23,8 +23,8 @@
                     $aksi = view('penugasan_pengiriman.partials.actions', compact('ship'))->render();
                     return [
                         $i + 1,
-                        e($ship->penugasan->nama_customer ?? '-'),
-                        e($ship->penugasan->nama_barang ?? '-'),
+                        e($ship->penugasan->customer->nama_customer ?? '-'),
+                        e($ship->penugasan->barang->nama_barang ?? '-'),
                         e($ship->penugasan->qty ?? '-'),
                         e($ship->penugasan->teknisi->name ?? '-'),
                         $ship->created_at ? \Carbon\Carbon::parse($ship->created_at)->translatedFormat('d F Y') : '-',

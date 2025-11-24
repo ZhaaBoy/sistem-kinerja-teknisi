@@ -19,9 +19,9 @@ class HasilEnrollmentController extends Controller
 
         return view('hasil_enrollment.index', compact('assignments'));
     }
+
     public function create(EnrollmentAssignment $assignment)
     {
-        // teknisi hanya boleh input untuk tugas miliknya & yang belum selesai
         abort_unless(Auth::user()->role === User::ROLE_TEKNISI, 403);
         abort_unless($assignment->teknisi_id === Auth::id(), 403);
         abort_if($assignment->status === 'selesai', 403);
@@ -39,28 +39,46 @@ class HasilEnrollmentController extends Controller
 
         $now = now();
 
-        // Update hasil pengerjaan teknisi
+        // -------------------------------------------------
+        // 🚀 HITUNG POIN BERDASARKAN DEADLINE
+        // -------------------------------------------------
+
+        // Ambil nilai poin penuh dari controller utama
+        $fullPoint = \App\Http\Controllers\EnrollmentAssignmentController::POIN[$assignment->tingkat_kesulitan];
+
+        // Tentukan poin final
+        if ($assignment->timeline) {
+            $deadline = \Carbon\Carbon::parse($assignment->timeline);
+
+            // Jika diselesaikan sebelum/tepat deadline → poin penuh
+            if ($now->lte($deadline)) {
+                $finalPoint = $fullPoint;
+            } else {
+                // Terlambat → poin setengah
+                $finalPoint = floor($fullPoint / 2);
+            }
+        } else {
+            // Jika tidak ada timeline (jaga-jaga)
+            $finalPoint = $fullPoint;
+        }
+
+        // -------------------------------------------------
+        // 🚀 UPDATE TUGAS
+        // -------------------------------------------------
         $assignment->update([
             'deskripsi_hasil' => $val['deskripsi_hasil'],
             'completed_at' => $now,
+            'poin' => $finalPoint,
             'status' => 'proses_packing',
         ]);
-
-        // 💡 Kurangi poin jika penyelesaian lewat timeline
-        if ($assignment->timeline && $now->greaterThan($assignment->timeline)) {
-            $assignment->update([
-                'poin' => $assignment->poin / 2,
-            ]);
-        }
 
         return redirect()
             ->route('hasil-enrollment.index')
             ->with([
                 'type' => 'success',
-                'message' => 'Hasil pekerjaan disimpan. Status berubah ke Proses Packing.'
+                'message' => 'Hasil pekerjaan disimpan dan poin dihitung otomatis.'
             ]);
     }
-
 
     public function selesaiPacking(EnrollmentAssignment $assignment)
     {

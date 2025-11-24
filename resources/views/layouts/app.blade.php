@@ -28,9 +28,11 @@
 <body>
     <div class="bg-base-200 flex min-h-screen flex-col">
         {{-- ✅ Alert Global (akan muncul di pojok kanan atas) --}}
-        @if (session('message'))
+        {{-- @if (session('message'))
             <x-alert :type="session('type', 'success')" :message="session('message')" toast />
-        @endif
+        @endif --}}
+
+
         <!-- Header -->
         <x-navbar />
 
@@ -40,6 +42,7 @@
         <!-- Main Content -->
         <div class="lg:ps-75 flex grow flex-col">
             <main class="mx-auto w-full max-w-[1280px] flex-1 grow space-y-6 p-6">
+                @include('sweetalert::alert')
                 @yield('content')
             </main>
 
@@ -59,20 +62,8 @@
     </div>
 
     <!-- JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @if (session('message'))
-        <script>
-            Swal.fire({
-                icon: '{{ session('type') ?? 'info' }}', // success, error, info, warning
-                title: '{{ ucfirst(session('type') ?? 'Info') }}',
-                text: '{{ session('message') }}',
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true
-            });
-        </script>
-    @endif
-    <script>
+    <script src="{{ asset('vendor/sweetalert/sweetalert.all.js') }}"></script>
+    {{-- <script>
         document.addEventListener('alpine:init', () => {
             window.addEventListener('notify', event => {
                 const {
@@ -94,7 +85,7 @@
                 setTimeout(() => container.remove(), 3000) // auto-hide
             })
         })
-    </script>
+    </script> --}}
 
     <script src="{{ asset('template/assets/dist/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
     <script src="{{ asset('template/assets/dist/libs/flyonui/flyonui.js') }}"></script>

@@ -78,9 +78,7 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
-        // === SAMA seperti dashboard ===
         $grouped = $assignments->groupBy('teknisi_id');
-
         $stats = $grouped->map(function ($rows) {
             return [
                 'nama' => $rows->first()->teknisi->name ?? '-',
@@ -89,15 +87,14 @@ class DashboardController extends Controller
                 'dikerjakan' => $rows->where('status', 'dikerjakan_teknisi')->count(),
                 'poin' => $rows->sum('poin'),
             ];
-        });
-        $stats = $stats->sortByDesc('poin');
+        })->sortByDesc('poin');
 
-        $pdf = \PDF::loadView('cetaknilai', [
+        return PDF::loadView('cetaknilai', [
             'stats' => $stats,
             'start' => $start->format('d M Y'),
             'end' => $end->format('d M Y'),
-        ])->setPaper('a4', 'portrait');
-
-        return $pdf->stream('Laporan-Nilai-' . now()->format('d-m-Y') . '.pdf');
+            'chart_bar' => $r->chart_bar,
+            'chart_pie' => $r->chart_pie,
+        ])->setPaper('a4', 'portrait')->stream();
     }
 }

@@ -16,33 +16,43 @@
         </div>
 
         <div class="flex flex-col lg:flex-row justify-center items-center gap-3">
-            {{-- Filter --}}
-            <form method="GET"
-                class="flex flex-wrap justify-center items-center gap-3 bg-base-200/60 px-4 py-3 rounded-xl shadow-sm">
+
+            {{-- FORM FILTER --}}
+            <form method="GET" class="flex gap-3 bg-base-200/60 px-4 py-3 rounded-xl shadow-sm">
                 <div class="flex items-center gap-2">
                     <input type="date" name="start_date" value="{{ $start }}"
-                        class="input input-sm input-bordered rounded-lg focus:outline-none focus:ring-2 focus:ring-info" />
+                        class="input input-sm input-bordered rounded-lg" />
                     <span class="text-gray-400">s/d</span>
                     <input type="date" name="end_date" value="{{ $end }}"
-                        class="input input-sm input-bordered rounded-lg focus:outline-none focus:ring-2 focus:ring-info" />
+                        class="input input-sm input-bordered rounded-lg" />
                 </div>
+
                 <x-button type="submit" size="sm" variant="info" class="px-4">
                     <span class="icon-[tabler--filter] mr-1"></span> Filter
                 </x-button>
             </form>
 
-            {{-- Cetak Button --}}
+            {{-- CETAK NILAI — Versi FINAL --}}
             @if ($user->role === \App\Models\User::ROLE_KEPALA_GUDANG)
-                <form action="{{ route('dashboard.cetak') }}" method="GET" target="_blank">
-                    <input type="hidden" name="start_date" value="{{ $start }}">
-                    <input type="hidden" name="end_date" value="{{ $end }}">
-                    <x-button variant="primary" size="sm" class="px-4">
+                <form action="{{ route('dashboard.cetak') }}" method="GET" id="formCetak" target="_blank">
+
+                    {{-- Periode diisi oleh JS dari form filter --}}
+                    <input type="hidden" id="cetak_start" name="start_date">
+                    <input type="hidden" id="cetak_end" name="end_date">
+
+                    {{-- Chart Base64 --}}
+                    <input type="hidden" id="chart_bar" name="chart_bar">
+                    <input type="hidden" id="chart_pie" name="chart_pie">
+
+                    <x-button type="submit" variant="primary" size="sm" class="px-4">
                         <span class="icon-[tabler--printer] mr-1"></span> Cetak Nilai
                     </x-button>
                 </form>
             @endif
+
         </div>
     </div>
+
 
     {{-- CHART SECTION --}}
     @if ($user->role === \App\Models\User::ROLE_KEPALA_GUDANG || $user->role === \App\Models\User::ROLE_TEKNISI)
@@ -75,13 +85,17 @@
 
     {{-- APEXCHARTS --}}
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    {{-- APEXCHARTS --}}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const labels = @json($chartLabels);
             const values = @json($chartValues);
             const pieData = @json($pieData);
             const isDark = document.documentElement.classList.contains('dark');
-            // === Bar Chart ===
+
+            // === BAR CHART ===
             const barOptions = {
                 chart: {
                     type: 'bar',
@@ -100,8 +114,8 @@
                 plotOptions: {
                     bar: {
                         borderRadius: 6,
-                        columnWidth: '45%',
-                    },
+                        columnWidth: '45%'
+                    }
                 },
                 dataLabels: {
                     enabled: false
@@ -110,7 +124,7 @@
                     categories: labels,
                     labels: {
                         style: {
-                            colors: isDark ? '#ffffff' : '#374151', // <-- nama teknisi
+                            colors: isDark ? '#ffffff' : '#374151',
                             fontSize: '12px',
                         }
                     }
@@ -124,7 +138,7 @@
                     },
                     labels: {
                         style: {
-                            colors: isDark ? '#ffffff' : '#374151', // <-- angka sumbu
+                            colors: isDark ? '#ffffff' : '#374151',
                             fontSize: '12px'
                         }
                     }
@@ -133,24 +147,26 @@
                     borderColor: isDark ? '#374151' : '#e5e7eb'
                 },
                 tooltip: {
-                    theme: isDark ? 'dark' : 'light', // <-- tooltip ikut tema
+                    theme: isDark ? 'dark' : 'light',
                     y: {
                         formatter: (val) => val + " Poin"
                     }
                 },
                 theme: {
-                    mode: isDark ? 'dark' : 'light', // <-- penting agar chart style ikut mode
+                    mode: isDark ? 'dark' : 'light'
                 }
             };
 
-            new ApexCharts(document.querySelector("#barChart"), barOptions).render();
+            // SIMPAN INSTANCE GLOBAL
+            window.barChartObj = new ApexCharts(document.querySelector("#barChart"), barOptions);
+            window.barChartObj.render();
 
 
-            // === Pie Chart ===
+            // === PIE CHART ===
             const pieOptions = {
                 chart: {
                     type: 'donut',
-                    height: 350,
+                    height: 350
                 },
                 series: pieData,
                 labels: labels,
@@ -165,8 +181,8 @@
                     pie: {
                         donut: {
                             size: '65%'
-                        },
-                    },
+                        }
+                    }
                 },
                 dataLabels: {
                     enabled: true,
@@ -174,15 +190,90 @@
                         fontSize: '13px',
                         fontWeight: 600
                     },
-                    formatter: (val) => val.toFixed(1) + '%',
+                    formatter: val => val.toFixed(1) + '%'
                 },
                 tooltip: {
                     y: {
-                        formatter: (val) => val.toFixed(1) + '%'
+                        formatter: val => val.toFixed(1) + '%'
                     }
                 }
             };
-            new ApexCharts(document.querySelector("#pieChart"), pieOptions).render();
+
+            // SIMPAN INSTANCE GLOBAL
+            window.pieChartObj = new ApexCharts(document.querySelector("#pieChart"), pieOptions);
+            window.pieChartObj.render();
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("formCetak");
+            if (!form) return;
+
+            form.addEventListener("submit", async function(e) {
+                e.preventDefault();
+
+                // Ambil periode dari form filter
+                document.getElementById("cetak_start").value =
+                    document.querySelector("input[name=start_date]").value;
+                document.getElementById("cetak_end").value =
+                    document.querySelector("input[name=end_date]").value;
+
+                // Pastikan chart sudah render
+                if (!window.barChartObj || !window.pieChartObj) {
+                    console.error("Chart belum siap dirender");
+                    this.submit();
+                    return;
+                }
+
+                // Ambil Base64 chart
+                const barImg = await window.barChartObj.dataURI();
+                const pieImg = await window.pieChartObj.dataURI();
+
+                // Masukkan ke hidden input
+                document.getElementById("chart_bar").value = barImg.imgURI;
+                document.getElementById("chart_pie").value = pieImg.imgURI;
+
+                this.submit();
+            });
+        });
+    </script>
+
+
+
+    {{-- CETAK (FINAL) --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("cetakForm");
+            if (!form) return;
+
+            form.addEventListener("submit", async function(e) {
+                // Jika user klik tombol Filter → tidak perlu ambil chart
+                const isFilter = e.submitter && e.submitter.innerText.includes("Filter");
+                if (isFilter) return;
+
+                e.preventDefault();
+
+                // Pastikan chart sudah render
+                if (!window.barChartObj || !window.pieChartObj) {
+                    console.error("Chart belum selesai dirender!");
+                    this.submit();
+                    return;
+                }
+
+                // Ambil Base64 dari masing-masing chart
+                const barImg = await window.barChartObj.dataURI();
+                const pieImg = await window.pieChartObj.dataURI();
+
+                // Masukkan ke hidden input
+                document.getElementById("chart_bar").value = barImg.imgURI;
+                document.getElementById("chart_pie").value = pieImg.imgURI;
+
+                this.submit();
+            });
+        });
+    </script>
+
+
+
+
 @endsection

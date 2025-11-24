@@ -29,11 +29,10 @@
 
             $rows = $assignments
                 ->map(function ($a) {
-                    $aksi = view('penugasan_enrollment.partials.actions', compact('a'))->render();
                     return [
-                        'customer' => e($a->nama_customer ?? '-'),
-                        'barang' => e($a->nama_barang),
-                        'kode' => e($a->kode_barang),
+                        'customer' => e($a->customer->nama_customer ?? '-'),
+                        'barang' => e($a->barang->nama_barang ?? '-'),
+                        'kode' => e($a->barang->kode_barang ?? '-'),
                         'qty' => $a->qty,
                         'teknisi' => e($a->teknisi->name ?? '-'),
                         'kes' => ucfirst($a->tingkat_kesulitan),
@@ -57,10 +56,11 @@
                                 'slot' => 'Dikerjakan',
                             ])->render(),
                         },
-                        'aksi' => $aksi,
+                        'aksi' => view('penugasan_enrollment.partials.actions', ['a' => $a])->render(),
                     ];
                 })
                 ->toArray();
+
         @endphp
 
         <x-table :headers="$headers" :rows="$rows" />

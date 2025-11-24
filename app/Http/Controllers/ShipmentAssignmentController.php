@@ -20,10 +20,12 @@ class ShipmentAssignmentController extends Controller
         abort_unless(auth()->user()->role === User::ROLE_KEPALA_GUDANG, 403);
 
         // hanya ambil penugasan selesai & belum dikirim
-        $selesai = EnrollmentAssignment::selesai()
+        $selesai = EnrollmentAssignment::with(['barang', 'customer'])
+            ->selesai()
             ->doesntHave('pengiriman')
             ->orderByDesc('completed_at')
-            ->get(['id', 'nama_barang', 'qty']);
+            ->get();
+
 
         return view('penugasan_pengiriman.create', compact('selesai'));
     }

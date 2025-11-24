@@ -9,16 +9,15 @@ class EnrollmentAssignment extends Model
     protected $fillable = [
         'kepala_gudang_id',
         'teknisi_id',
-        'nama_barang',
-        'kode_barang',
+        'customer_id',
+        'barang_id',
         'qty',
-        'nama_customer',
         'tingkat_kesulitan',
         'poin',
+        'timeline',
         'status',
         'deskripsi_hasil',
         'completed_at',
-        'timeline'
     ];
 
     protected $casts = [
@@ -40,6 +39,15 @@ class EnrollmentAssignment extends Model
     public function pengiriman()
     {
         return $this->hasOne(ShipmentAssignment::class);
+    }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
     }
 
     // 🔹 Scopes (HARUS pakai public function)

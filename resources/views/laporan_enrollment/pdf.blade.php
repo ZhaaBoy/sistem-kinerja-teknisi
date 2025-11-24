@@ -130,15 +130,15 @@
     <table>
         <tr>
             <th>Nama Barang</th>
-            <td>{{ $assignment->nama_barang }}</td>
+            <td>{{ $assignment->barang->nama_barang ?? '-' }}</td>
         </tr>
         <tr>
             <th>Kode Barang</th>
-            <td>{{ $assignment->kode_barang }}</td>
+            <td>{{ $assignment->barang->kode_barang ?? '-' }}</td>
         </tr>
         <tr>
             <th>Nama Customer</th>
-            <td>{{ $assignment->nama_customer ?? '-' }}</td>
+            <td>{{ $assignment->customer->nama_customer ?? '-' }}</td>
         </tr>
         <tr>
             <th>Teknisi</th>
