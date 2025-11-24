@@ -28,7 +28,7 @@
 
             <div>
                 <span class="text-gray-500">Kesulitan:</span>
-                <b>{{ ucfirst($assignment->tingkat_kesulitan) }} ({{ $assignment->poin }} pts)</b>
+                <b>{{ ucfirst($assignment->tingkat_kesulitan) }}</b>
             </div>
         </div>
 
@@ -40,11 +40,15 @@
                 <textarea name="deskripsi_hasil" class="textarea w-full border-gray-300 rounded-lg" rows="5" required></textarea>
             </div>
 
-            <div class="flex items-center gap-2">
-                <x-button type="submit" variant="success" auto-loading>Selesaikan</x-button>
-                <a href="{{ route('penugasan-enrollment.index') }}">
-                    <x-button variant="secondary">Batal</x-button>
-                </a>
+
+            <div class="flex gap-3">
+                <x-button type="submit" variant="primary" auto-loading>
+                    Simpan
+                </x-button>
+
+                <x-button variant="secondary" href="{{ route('penugasan-enrollment.index') }}">
+                    Kembali
+                </x-button>
             </div>
         </form>
     </div>

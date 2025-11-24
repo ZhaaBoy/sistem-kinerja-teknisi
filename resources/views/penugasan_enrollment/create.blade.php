@@ -8,37 +8,55 @@
             {{-- ===================== --}}
             {{--  SEARCH CUSTOMER     --}}
             {{-- ===================== --}}
-            <div x-data="searchCustomer()" class="relative">
+            <div x-data="searchCustomer()" x-init="init()" class="relative">
                 <label class="block mb-1">Customer</label>
-                <input type="text" x-model="keyword" @input="search" placeholder="Ketik nama customer…"
+                <input type="text" x-ref="input" x-model="keyword" @input="search" placeholder="Ketik nama customer..."
                     class="input w-full border-gray-300 rounded-lg">
+
                 <input type="hidden" name="customer_id" x-model="selectedId">
 
                 <ul x-show="results.length"
-                    class="absolute z-50 bg-white border border-gray-200 w-full rounded-lg mt-1 max-h-40 overflow-y-auto">
+                    class="absolute z-50 bg-white shadow-lg border border-gray-300 w-full rounded-lg mt-1 max-h-52 overflow-y-auto">
+
                     <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)" class="px-3 py-2 cursor-pointer hover:bg-gray-100"
-                            x-text="item.nama_customer"></li>
+                        <li @click="select(item)"
+                            class="px-3 py-2 cursor-pointer transition-all duration-150
+                   hover:bg-blue-100 hover:text-blue-700
+                   flex items-center gap-2">
+
+                            <span class="icon-[tabler--user] text-gray-400"></span>
+                            <span x-text="item.nama_customer"></span>
+                        </li>
                     </template>
+
                 </ul>
             </div>
 
             {{-- ===================== --}}
             {{--  SEARCH BARANG       --}}
             {{-- ===================== --}}
-            <div x-data="searchBarang()" class="relative">
+            <div x-data="searchBarang()" x-init="init()" class="relative">
                 <label class="block mb-1">Nama Barang</label>
-                <input type="text" x-model="keyword" @input="search" placeholder="Ketik nama barang…"
+                <input type="text" x-ref="input" x-model="keyword" @input="search" placeholder="Ketik nama barang..."
                     class="input w-full border-gray-300 rounded-lg">
                 <input type="hidden" name="barang_id" x-model="selectedId">
 
                 <ul x-show="results.length"
-                    class="absolute z-50 bg-white border border-gray-200 w-full rounded-lg mt-1 max-h-40 overflow-y-auto">
+                    class="absolute z-50 bg-white shadow-lg border border-gray-300 w-full rounded-lg mt-1 max-h-52 overflow-y-auto">
+
                     <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)" class="px-3 py-2 cursor-pointer hover:bg-gray-100"
-                            x-text="item.nama_barang"></li>
+                        <li @click="select(item)"
+                            class="px-3 py-2 cursor-pointer transition-all duration-150
+                   hover:bg-blue-100 hover:text-blue-700
+                   flex items-center gap-2">
+
+                            <span class="icon-[tabler--tag] text-gray-400"></span>
+                            <span x-text="item.nama_barang"></span>
+                        </li>
                     </template>
+
                 </ul>
+
             </div>
 
             <x-input label="Kode Barang" name="kode_barang" id="kode_barang" readonly />
@@ -66,11 +84,15 @@
             </div>
 
             <div class="flex gap-3">
-                <x-button type="submit" variant="primary" auto-loading>Simpan</x-button>
-                <a href="{{ route('penugasan-enrollment.index') }}">
-                    <x-button variant="secondary">Kembali</x-button>
-                </a>
+                <x-button type="submit" variant="primary" auto-loading>
+                    Simpan
+                </x-button>
+
+                <x-button variant="secondary" href="{{ route('penugasan-enrollment.index') }}">
+                    Kembali
+                </x-button>
             </div>
+
         </form>
     </div>
 
@@ -82,11 +104,20 @@
                     results: [],
                     selectedId: '',
 
+                    init() {
+                        // Load langsung ketika user mengklik input
+                        this.$refs.input.addEventListener('focus', () => {
+                            this.loadAll();
+                        });
+                    },
+
+                    loadAll() {
+                        fetch(`/api/search/customers?q=`)
+                            .then(res => res.json())
+                            .then(data => this.results = data);
+                    },
+
                     search() {
-                        if (this.keyword.length < 2) {
-                            this.results = [];
-                            return;
-                        }
                         fetch(`/api/search/customers?q=${this.keyword}`)
                             .then(res => res.json())
                             .then(data => this.results = data);
@@ -106,11 +137,19 @@
                     results: [],
                     selectedId: '',
 
+                    init() {
+                        this.$refs.input.addEventListener('focus', () => {
+                            this.loadAll();
+                        });
+                    },
+
+                    loadAll() {
+                        fetch(`/api/search/barangs?q=`)
+                            .then(res => res.json())
+                            .then(data => this.results = data);
+                    },
+
                     search() {
-                        if (this.keyword.length < 2) {
-                            this.results = [];
-                            return;
-                        }
                         fetch(`/api/search/barangs?q=${this.keyword}`)
                             .then(res => res.json())
                             .then(data => this.results = data);

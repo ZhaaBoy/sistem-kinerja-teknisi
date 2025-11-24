@@ -1,3 +1,6 @@
+@php
+    $isLink = $attributes->has('href');
+@endphp
 @props([
     'variant' => 'primary',
     'size' => 'md',
@@ -52,14 +55,23 @@
         </template>
     </button>
 @else
-    <button
-        {{ $attributes->merge([
-            'class' => "btn {$variantClass} {$sizeClass} {$outlineClass} {$blockClass} {$disabledClass}",
-            'disabled' => $disabled || $loading,
-        ]) }}>
-        @if ($loading)
-            <span class="loading loading-spinner mr-2"></span>
-        @endif
-        {{ $slot }}
-    </button>
+    @if ($isLink)
+        <a
+            {{ $attributes->merge([
+                'class' => "btn {$variantClass} {$sizeClass} {$outlineClass} {$blockClass} {$disabledClass}",
+            ]) }}>
+            {{ $slot }}
+        </a>
+    @else
+        <button
+            {{ $attributes->merge([
+                'class' => "btn {$variantClass} {$sizeClass} {$outlineClass} {$blockClass} {$disabledClass}",
+                'disabled' => $disabled || $loading,
+            ]) }}>
+            @if ($loading)
+                <span class="loading loading-spinner mr-2"></span>
+            @endif
+            {{ $slot }}
+        </button>
+    @endif
 @endif
