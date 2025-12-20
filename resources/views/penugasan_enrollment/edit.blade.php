@@ -41,9 +41,9 @@
 
             <div class="flex gap-3">
                 <x-button type="submit" variant="primary">Perbarui</x-button>
-                <a href="{{ route('penugasan-enrollment.index') }}">
-                    <x-button variant="secondary">Kembali</x-button>
-                </a>
+                <x-button href="{{ route('penugasan-enrollment.index') }}" variant="secondary">
+                    Kembali
+                </x-button>
             </div>
         </form>
     </div>
