@@ -17,6 +17,7 @@ class EnrollmentAssignment extends Model
         'timeline',
         'status',
         'deskripsi_hasil',
+        'solusi',
         'completed_at',
     ];
 

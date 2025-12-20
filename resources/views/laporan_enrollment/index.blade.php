@@ -25,7 +25,8 @@
                 'Qty',
                 'Teknisi',
                 'Kesulitan',
-                'Deskripsi',
+                'Hasil Permasalahan',
+                'Solusi',
                 'Waktu Penyelesaian',
                 'Status',
                 'Aksi',
@@ -47,7 +48,8 @@
                         'qty' => $a->qty,
                         'teknisi' => e($a->teknisi->name ?? '-'),
                         'kes' => ucfirst($a->tingkat_kesulitan),
-                        'deskripsi' => e(Str::limit($a->deskripsi_hasil ?? '-', 40)),
+                        'permsalahan' => e(Str::limit($a->deskripsi_hasil ?? '-', 40)),
+                        'solusi' => e(Str::limit($a->solusi ?? '-', 40)),
                         'waktu' => $durasi,
                         'status' => match ($a->status) {
                             'selesai' => view('components.badge', [

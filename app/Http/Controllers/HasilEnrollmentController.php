@@ -35,50 +35,38 @@ class HasilEnrollmentController extends Controller
 
         $val = $r->validate([
             'deskripsi_hasil' => ['required', 'string', 'max:1000'],
+            'solusi'          => ['required', 'string', 'max:1000'],
         ]);
 
         $now = now();
 
-        // -------------------------------------------------
-        // 🚀 HITUNG POIN BERDASARKAN DEADLINE
-        // -------------------------------------------------
-
-        // Ambil nilai poin penuh dari controller utama
         $fullPoint = \App\Http\Controllers\EnrollmentAssignmentController::POIN[$assignment->tingkat_kesulitan];
 
-        // Tentukan poin final
         if ($assignment->timeline) {
             $deadline = \Carbon\Carbon::parse($assignment->timeline);
-
-            // Jika diselesaikan sebelum/tepat deadline → poin penuh
-            if ($now->lte($deadline)) {
-                $finalPoint = $fullPoint;
-            } else {
-                // Terlambat → poin setengah
-                $finalPoint = floor($fullPoint / 2);
-            }
+            $finalPoint = $now->lte($deadline)
+                ? $fullPoint
+                : floor($fullPoint / 2);
         } else {
-            // Jika tidak ada timeline (jaga-jaga)
             $finalPoint = $fullPoint;
         }
 
-        // -------------------------------------------------
-        // 🚀 UPDATE TUGAS
-        // -------------------------------------------------
         $assignment->update([
             'deskripsi_hasil' => $val['deskripsi_hasil'],
-            'completed_at' => $now,
-            'poin' => $finalPoint,
-            'status' => 'proses_packing',
+            'solusi'          => $val['solusi'],
+            'completed_at'    => $now,
+            'poin'            => $finalPoint,
+            'status'          => 'proses_packing',
         ]);
 
         return redirect()
             ->route('hasil-enrollment.index')
             ->with([
                 'type' => 'success',
-                'message' => 'Hasil pekerjaan disimpan dan poin dihitung otomatis.'
+                'message' => 'Hasil pekerjaan dan solusi berhasil disimpan.'
             ]);
     }
+
 
     public function selesaiPacking(EnrollmentAssignment $assignment)
     {

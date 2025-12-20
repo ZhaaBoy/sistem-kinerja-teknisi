@@ -153,8 +153,12 @@
             <td>{{ $assignment->qty }}</td>
         </tr>
         <tr>
-            <th>Deskripsi Hasil</th>
+            <th>Hasil Permaslahan</th>
             <td>{{ $assignment->deskripsi_hasil ?? '-' }}</td>
+        </tr>
+        <tr>
+            <th>Solusi</th>
+            <td>{{ $assignment->solusi ?? '-' }}</td>
         </tr>
         <tr>
             <th>Waktu Penyelesaian</th>

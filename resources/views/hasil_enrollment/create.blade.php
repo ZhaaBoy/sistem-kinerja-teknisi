@@ -74,13 +74,32 @@
                 <h3 class="text-xl font-semibold text-gray-800">Input Hasil Pekerjaan</h3>
             </div>
 
-            <form method="POST" action="{{ route('hasil-enrollment.store', $assignment) }}" class="space-y-4">
+            <form method="POST" action="{{ route('hasil-enrollment.store', $assignment) }}" class="space-y-6">
                 @csrf
 
-                <div>
-                    <label class="block mb-1 font-medium text-gray-700">Deskripsi Hasil</label>
-                    <textarea name="deskripsi_hasil" class="textarea textarea-bordered w-full rounded-xl focus:ring-2 focus:ring-primary/40"
-                        rows="5" required></textarea>
+                {{-- GRID KIRI KANAN --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                    {{-- DESKRIPSI --}}
+                    <div>
+                        <label class="block mb-1 font-medium text-gray-700">
+                            Deskripsi Permasalahan
+                        </label>
+                        <textarea name="deskripsi_hasil" rows="6" required
+                            class="textarea textarea-bordered w-full rounded-xl
+                           focus:ring-2 focus:ring-primary/40">{{ old('deskripsi_hasil') }}</textarea>
+                    </div>
+
+                    {{-- SOLUSI --}}
+                    <div>
+                        <label class="block mb-1 font-medium text-gray-700">
+                            Solusi
+                        </label>
+                        <textarea name="solusi" rows="6" required
+                            class="textarea textarea-bordered w-full rounded-xl
+                           focus:ring-2 focus:ring-primary/40">{{ old('solusi') }}</textarea>
+                    </div>
+
                 </div>
 
                 <div class="flex gap-3 justify-end pt-3">
@@ -94,6 +113,7 @@
                 </div>
             </form>
         </div>
+
 
     </div>
 @endsection
