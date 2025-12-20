@@ -7,61 +7,63 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    // Display a listing of customers
     public function index()
     {
-        $customers = Customer::all();
+        // eager load biar index tidak N+1
+        $customers = Customer::with('barang')->get();
+
         return view('customers.index', compact('customers'));
     }
 
-    // Show the form for creating a new customer
     public function create()
     {
         return view('customers.create');
     }
 
-    // Store a newly created customer in storage
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_customer' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'no_telpon' => 'required|string|max:20',
-            'nama_pic' => 'required|string|max:255',
-            'keterangan' => 'nullable|string',
+            'alamat'        => 'required|string',
+            'no_telpon'     => 'required|string|max:20',
+            'nama_pic'      => 'required|string|max:255',
+            'barang_id'     => 'nullable|exists:barangs,id',
+            'keterangan'    => 'nullable|string',
         ]);
 
-        Customer::create($request->all());
+        Customer::create($validated);
 
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
-    // Show the form for editing the specified customer
     public function edit(Customer $customer)
     {
+        // kalau edit nanti mau kamu tambahin search barang juga, tinggal reuse script yang sama
+        $customer->load('barang');
+
         return view('customers.edit', compact('customer'));
     }
 
-    // Update the specified customer in storage
     public function update(Request $request, Customer $customer)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_customer' => 'required|string|max:255',
-            'alamat' => 'required|string',
-            'no_telpon' => 'required|string|max:20',
-            'nama_pic' => 'required|string|max:255',
-            'keterangan' => 'nullable|string',
+            'alamat'        => 'required|string',
+            'no_telpon'     => 'required|string|max:20',
+            'nama_pic'      => 'required|string|max:255',
+            'barang_id'     => 'nullable|exists:barangs,id',
+            'keterangan'    => 'nullable|string',
         ]);
 
-        $customer->update($request->all());
+        $customer->update($validated);
 
         return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
     }
 
-    // Remove the specified customer from storage
     public function destroy(Customer $customer)
     {
         $customer->delete();
+
         return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
 }

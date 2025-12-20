@@ -74,21 +74,29 @@ class EnrollmentAssignmentController extends Controller
 
         $val = $r->validate([
             'customer_id'       => ['required', 'exists:customers,id'],
-            'barang_id'         => ['required', 'exists:barangs,id'],
             'qty'               => ['required', 'integer', 'min:1'],
             'timeline'          => ['required', 'date'],
             'teknisi_id'        => ['required', 'exists:users,id'],
             'tingkat_kesulitan' => ['required', 'in:mudah,menengah,sulit'],
         ]);
 
+        // ⬇️ AMBIL BARANG DARI CUSTOMER
+        $customer = Customer::with('barang')->findOrFail($val['customer_id']);
+
+        if (!$customer->barang_id) {
+            abort(422, 'Customer belum memiliki barang.');
+        }
+
+        $val['barang_id'] = $customer->barang_id;
         $val['kepala_gudang_id'] = Auth::id();
-        $val['status'] = 'dikerjakan_teknisi'; // tidak set poin di sini
+        $val['status'] = 'dikerjakan_teknisi';
 
         EnrollmentAssignment::create($val);
 
         return redirect()->route('penugasan-enrollment.index')
             ->with(['type' => 'success', 'message' => 'Penugasan berhasil dibuat.']);
     }
+
 
     public function edit(EnrollmentAssignment $assignment)
     {

@@ -19,12 +19,19 @@
         </div>
 
         @php
-            $headers = ['Nama Customer', 'Alamat', 'No Telpon', 'PIC', 'Keterangan', 'Aksi'];
+            $headers = ['Nama Customer', 'Barang', 'Alamat', 'No Telpon', 'PIC', 'Keterangan', 'Aksi'];
 
             $rows = $customers
                 ->map(function ($customer) {
+                    $barangText = '-';
+
+                    if ($customer->barang) {
+                        $barangText = e($customer->barang->kode_barang) . ' - ' . e($customer->barang->nama_barang);
+                    }
+
                     return [
                         e($customer->nama_customer),
+                        $barangText,
                         e($customer->alamat),
                         e($customer->no_telpon),
                         e($customer->nama_pic),

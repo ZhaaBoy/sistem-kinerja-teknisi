@@ -16,4 +16,9 @@ class Barang extends Model
         'nama_barang',
         'keterangan',
     ];
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

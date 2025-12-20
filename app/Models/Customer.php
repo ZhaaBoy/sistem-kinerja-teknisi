@@ -9,7 +9,6 @@ class Customer extends Model
 {
     use HasFactory;
 
-    // Table name (optional if follows Laravel conventions)
     protected $table = 'customers';
 
     protected $fillable = [
@@ -17,6 +16,12 @@ class Customer extends Model
         'alamat',
         'no_telpon',
         'nama_pic',
+        'barang_id',
         'keterangan',
     ];
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class);
+    }
 }

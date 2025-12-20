@@ -1,65 +1,49 @@
 @extends('layouts.app')
 @section('title', 'Tambah Penugasan')
 @section('content')
-    <div class="card bg-base-100 shadow p-6 max-w-2xl">
+    <div class="card bg-base-100 shadow p-6 max-w-2xl" x-data="searchCustomer()" x-init="init()">>
+
         <form method="POST" action="{{ route('penugasan-enrollment.store') }}" class="space-y-4">
             @csrf
 
             {{-- ===================== --}}
             {{--  SEARCH CUSTOMER     --}}
             {{-- ===================== --}}
-            <div x-data="searchCustomer()" x-init="init()" class="relative">
+            <div class="relative">
                 <label class="block mb-1">Customer</label>
-                <input type="text" x-ref="input" x-model="keyword" @input="search" placeholder="Ketik nama customer..."
-                    class="input w-full border-gray-300 rounded-lg">
 
-                <input type="hidden" name="customer_id" x-model="selectedId">
+                <input type="text" x-ref="input" x-model="keyword" @input.debounce.300ms="onInput"
+                    placeholder="Ketik nama customer..." class="input w-full border-gray-300 rounded-lg">
 
-                <ul x-show="results.length"
-                    class="absolute z-50 bg-white shadow-lg border border-gray-300 w-full rounded-lg mt-1 max-h-52 overflow-y-auto">
+                <input type="hidden" name="customer_id" :value="selectedId">
+                <input type="hidden" name="barang_id" :value="barangId">
+
+                <ul x-show="open && results.length" @click.outside="open = false"
+                    class="absolute z-50 bg-white shadow border w-full rounded-lg mt-1 max-h-52 overflow-y-auto">
 
                     <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)"
-                            class="px-3 py-2 cursor-pointer transition-all duration-150
-                   hover:bg-blue-100 hover:text-blue-700
-                   flex items-center gap-2">
-
-                            <span class="icon-[tabler--user] text-gray-400"></span>
-                            <span x-text="item.nama_customer"></span>
+                        <li @click="select(item)" class="px-3 py-2 cursor-pointer hover:bg-blue-100">
+                            <div class="font-medium" x-text="item.nama_customer"></div>
+                            <div class="text-xs text-gray-500"
+                                x-text="item.nama_barang ? item.nama_barang + ' (' + item.kode_barang + ')' : '-'">
+                            </div>
                         </li>
                     </template>
-
                 </ul>
             </div>
 
-            {{-- ===================== --}}
-            {{--  SEARCH BARANG       --}}
-            {{-- ===================== --}}
-            <div x-data="searchBarang()" x-init="init()" class="relative">
-                <label class="block mb-1">Nama Barang</label>
-                <input type="text" x-ref="input" x-model="keyword" @input="search" placeholder="Ketik nama barang..."
-                    class="input w-full border-gray-300 rounded-lg">
-                <input type="hidden" name="barang_id" x-model="selectedId">
 
-                <ul x-show="results.length"
-                    class="absolute z-50 bg-white shadow-lg border border-gray-300 w-full rounded-lg mt-1 max-h-52 overflow-y-auto">
 
-                    <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)"
-                            class="px-3 py-2 cursor-pointer transition-all duration-150
-                   hover:bg-blue-100 hover:text-blue-700
-                   flex items-center gap-2">
-
-                            <span class="icon-[tabler--tag] text-gray-400"></span>
-                            <span x-text="item.nama_barang"></span>
-                        </li>
-                    </template>
-
-                </ul>
-
+            {{-- AUTO BARANG --}}
+            <div>
+                <label class="block mb-1 font-medium">Nama Barang</label>
+                <input type="text" x-model="namaBarang" readonly class="input w-full border-gray-300 rounded-lg">
             </div>
 
-            <x-input label="Kode Barang" name="kode_barang" id="kode_barang" readonly />
+            <div>
+                <label class="block mb-1 font-medium">Kode Barang</label>
+                <input type="text" x-model="kodeBarang" readonly class="input w-full border-gray-300 rounded-lg">
+            </div>
 
             <x-input label="Qty" name="qty" type="number" min="1" required />
             <x-input label="Timeline (Deadline)" name="timeline" type="datetime-local" required />
@@ -102,64 +86,57 @@
                 return {
                     keyword: '',
                     results: [],
+                    open: false,
+
                     selectedId: '',
+                    barangId: '',
+                    namaBarang: '',
+                    kodeBarang: '',
 
                     init() {
-                        // Load langsung ketika user mengklik input
                         this.$refs.input.addEventListener('focus', () => {
                             this.loadAll();
+                            this.open = true;
                         });
                     },
 
+                    onInput() {
+                        if (!this.keyword.trim()) {
+                            this.results = [];
+                            this.open = false;
+                            return;
+                        }
+
+                        this.search();
+                    },
+
                     loadAll() {
-                        fetch(`/api/search/customers?q=`)
-                            .then(res => res.json())
-                            .then(data => this.results = data);
+                        fetch(`{{ route('api.customers.search') }}?q=`)
+                            .then(r => r.json())
+                            .then(d => {
+                                this.results = d;
+                                this.open = true;
+                            });
                     },
 
                     search() {
-                        fetch(`/api/search/customers?q=${this.keyword}`)
-                            .then(res => res.json())
-                            .then(data => this.results = data);
+                        fetch(`{{ route('api.customers.search') }}?q=${encodeURIComponent(this.keyword)}`)
+                            .then(r => r.json())
+                            .then(d => {
+                                this.results = d;
+                                this.open = true;
+                            });
                     },
 
                     select(item) {
                         this.keyword = item.nama_customer;
                         this.selectedId = item.id;
+                        this.barangId = item.barang_id;
+                        this.namaBarang = item.nama_barang ?? '-';
+                        this.kodeBarang = item.kode_barang ?? '-';
+
                         this.results = [];
-                    }
-                }
-            }
-
-            function searchBarang() {
-                return {
-                    keyword: '',
-                    results: [],
-                    selectedId: '',
-
-                    init() {
-                        this.$refs.input.addEventListener('focus', () => {
-                            this.loadAll();
-                        });
-                    },
-
-                    loadAll() {
-                        fetch(`/api/search/barangs?q=`)
-                            .then(res => res.json())
-                            .then(data => this.results = data);
-                    },
-
-                    search() {
-                        fetch(`/api/search/barangs?q=${this.keyword}`)
-                            .then(res => res.json())
-                            .then(data => this.results = data);
-                    },
-
-                    select(item) {
-                        this.keyword = item.nama_barang;
-                        this.selectedId = item.id;
-                        document.getElementById('kode_barang').value = item.kode_barang;
-                        this.results = [];
+                        this.open = false;
                     }
                 }
             }

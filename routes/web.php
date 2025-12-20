@@ -15,16 +15,41 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/api/search/customers', function () {
-    $q = request('q');
-    return \App\Models\Customer::where('nama_customer', 'like', "%$q%")
-        ->limit(10)->get(['id', 'nama_customer']);
+    $q = trim(request('q', ''));
+
+    return \App\Models\Customer::with('barang')
+        ->when(
+            $q !== '',
+            fn($q2) =>
+            $q2->where('nama_customer', 'like', "%{$q}%")
+        )
+        ->limit(10)
+        ->get()
+        ->map(fn($c) => [
+            'id'           => $c->id,
+            'nama_customer' => $c->nama_customer,
+            'barang_id'    => $c->barang_id,
+            'nama_barang'  => $c->barang?->nama_barang,
+            'kode_barang'  => $c->barang?->kode_barang,
+        ]);
 })->name('api.customers.search');
 
+
 Route::get('/api/search/barangs', function () {
-    $q = request('q');
-    return \App\Models\Barang::where('nama_barang', 'like', "%$q%")
-        ->limit(10)->get(['id', 'nama_barang', 'kode_barang']);
+    $q = trim(request('q', ''));
+
+    return \App\Models\Barang::query()
+        ->when($q !== '', function ($query) use ($q) {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('nama_barang', 'like', "%{$q}%")
+                    ->orWhere('kode_barang', 'like', "%{$q}%");
+            });
+        })
+        ->orderBy('nama_barang')
+        ->limit(10)
+        ->get(['id', 'nama_barang', 'kode_barang']);
 })->name('api.barangs.search');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

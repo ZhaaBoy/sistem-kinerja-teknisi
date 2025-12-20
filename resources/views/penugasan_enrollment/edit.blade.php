@@ -7,41 +7,11 @@
             @csrf
             @method('PUT')
 
-            {{-- ===================== --}}
-            {{--  SEARCH CUSTOMER     --}}
-            {{-- ===================== --}}
-            <div x-data="searchCustomerEdit('{{ $assignment->customer_id }}', '{{ $assignment->nama_customer }}')" class="relative">
-                <label class="block mb-1">Customer</label>
-                <input type="text" x-model="keyword" @input="search" class="input w-full border-gray-300 rounded-lg">
-                <input type="hidden" name="customer_id" x-model="selectedId">
+            <x-input label="Customer" :value="$assignment->customer->nama_customer" readonly />
 
-                <ul x-show="results.length"
-                    class="absolute z-50 bg-white border border-gray-200 w-full rounded-lg mt-1 max-h-40 overflow-y-auto">
-                    <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)" class="px-3 py-2 cursor-pointer hover:bg-gray-100"
-                            x-text="item.nama_customer"></li>
-                    </template>
-                </ul>
-            </div>
+            <x-input label="Barang" :value="$assignment->barang->nama_barang" readonly />
 
-            {{-- ===================== --}}
-            {{--  SEARCH BARANG       --}}
-            {{-- ===================== --}}
-            <div x-data="searchBarangEdit('{{ $assignment->barang_id }}', '{{ $assignment->nama_barang }}', '{{ $assignment->kode_barang }}')" class="relative">
-                <label class="block mb-1">Nama Barang</label>
-                <input type="text" x-model="keyword" @input="search" class="input w-full border-gray-300 rounded-lg">
-                <input type="hidden" name="barang_id" x-model="selectedId">
-
-                <ul x-show="results.length"
-                    class="absolute z-50 bg-white border border-gray-200 w-full rounded-lg mt-1 max-h-40 overflow-y-auto">
-                    <template x-for="item in results" :key="item.id">
-                        <li @click="select(item)" class="px-3 py-2 cursor-pointer hover:bg-gray-100"
-                            x-text="item.nama_barang"></li>
-                    </template>
-                </ul>
-            </div>
-
-            <x-input label="Kode Barang" name="kode_barang" id="kode_barang" :value="$assignment->kode_barang" readonly />
+            <x-input label="Kode Barang" :value="$assignment->barang->kode_barang" readonly />
 
             <x-input label="Qty" name="qty" type="number" min="1" :value="$assignment->qty" required />
 
@@ -79,8 +49,8 @@
     </div>
 
     {{-- Alpine Script --}}
-    @push('scripts')
+    {{-- @push('scripts')
         @include('penugasan_enrollment.search-script')
-    @endpush
+    @endpush --}}
 
 @endsection
